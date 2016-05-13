@@ -9,10 +9,10 @@ import httplib2
 import apiclient
 
 
-def sefaria_sheet_api(sheet_id):
-    """Gets JSON data of sheet with id `sheet_id` using the Sheet API"""
-    BASE_URL = 'http://www.sefaria.org/api/sheets/'
-    return requests.get('{}{}'.format(BASE_URL, sheet_id)).json()
+def sefaria_sheet_api(endpoint):
+    """Makes request to Sheet API `endpoint` and returns JSON data"""
+    return requests.get('http://www.sefaria.org/api/sheets/{}'.format(
+        endpoint)).json()
 
 
 def create_html_string(sheet):
@@ -28,10 +28,11 @@ def create_html_string(sheet):
     for source in sheet['sources']:
         try:
             text = source['text']
-            html += '{}<br>{}'.format(unicode(text.get('en', '')),
-                                      unicode(text.get('he', '')))
         except KeyError:
             html += unicode(source.get('comment', ''))
+        else:
+            html += '{}<br>{}'.format(unicode(text.get('en', '')),
+                                      unicode(text.get('he', '')))
     return html.encode('utf-8')
 
 
