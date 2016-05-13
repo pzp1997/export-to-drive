@@ -68,8 +68,8 @@ def main():
     sheet = sefaria_sheet_api(sheet_id)
 
     file_metadata = {
-        'mimeType': 'application/vnd.google-apps.spreadsheet'
         'name': sheet.get('title', '').strip(),
+        'mimeType': 'application/vnd.google-apps.document'
     }
 
     media = apiclient.http.MediaIoBaseUpload(
