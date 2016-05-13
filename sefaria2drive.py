@@ -19,20 +19,23 @@ def create_html_string(sheet):
     """Makes an html string from the JSON formatted sheet"""
     html = ''
 
-    title = unicode(sheet.get('title', '')).replace('\\n', '<br>')
-    html += title
+    title = unicode(sheet.get('title', '')).strip()
+    html += '{}<br>'.format(title)
 
     # author = ''
     # html += '<em>Source Sheet by <a href="{}">{}</a><em>'
 
     for source in sheet['sources']:
-        try:
-            text = source['text']
-        except KeyError:
-            html += unicode(source.get('comment', ''))
-        else:
-            html += '{}<br>{}'.format(unicode(text.get('en', '')),
-                                      unicode(text.get('he', '')))
+        if 'text' in source:
+            english = unicode(source['text'].get('en', '')).strip()
+            hebrew = unicode(source['text'].get('he', '')).strip()
+            html += '{}<br>{}'.format(english, hebrew)
+        elif 'outsideText' in source:
+            html += unicode(source['outsideText']).strip()
+        elif 'comment' in source:
+            html += unicode(source['comment']).strip()
+        html += '<br><br>'
+
     return html.encode('utf-8')
 
 
