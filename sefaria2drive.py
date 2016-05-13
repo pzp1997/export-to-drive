@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-import os
+import StringIO
 
 import requests
 from oauth2client import client
@@ -33,17 +33,6 @@ def create_html_string(sheet):
         except KeyError:
             html += unicode(source.get('comment', ''))
     return html.encode('utf-8')
-
-
-def create_html_file(sheet, path='files/'):
-    """Creates an html file of `sheet` and returns path of its location."""
-    if not os.path.exists(path):
-        os.makedirs(path)
-    file_path = os.path.join(path, '{}.html'.format(sheet['id']))
-    with open(file_path, 'w') as f:
-        html_string = create_html_string(sheet)
-        f.write(html_string)
-    return file_path
 
 
 class Store(object):
@@ -82,7 +71,7 @@ def main():
     }
 
     media = apiclient.http.MediaIoBaseUpload(
-        StringIO.StringIO(create_html_string(sheet)),
+        StringIO.StringIO(create_html_string(sheet_data)),
         mimetype='text/html',
         resumable=True)
 
