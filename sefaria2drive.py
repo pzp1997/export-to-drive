@@ -48,7 +48,6 @@ def create_html_file(sheet, path='files/'):
 
 class Store(object):
     """Stub class to get run_flow to work."""
-
     def put(self, credential):
         """Stub method that will be called in run_flow."""
         pass
@@ -82,10 +81,10 @@ def main():
         'mimeType': 'application/vnd.google-apps.spreadsheet'
     }
 
-    media = apiclient.http.MediaFileUpload(
-                create_html_file(sheet_data),
-                mimetype='text/html',
-                resumable=True)
+    media = apiclient.http.MediaIoBaseUpload(
+        StringIO.StringIO(create_html_string(sheet)),
+        mimetype='text/html',
+        resumable=True)
 
     new_file = service.files().create(body=file_metadata,
                                       media_body=media,
