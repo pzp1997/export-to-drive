@@ -17,22 +17,22 @@ def sefaria_sheet_api(sheet_id):
 
 def create_html_string(sheet):
     """Makes an html string from the JSON formatted sheet"""
-    html = u''
+    html = ''
 
-    title = sheet.get('title', '').strip()
-    title += '<br>' if len(title) > 0 else ''
+    title = unicode(sheet.get('title', '')).replace('\\n', '<br>')
     html += title
 
-    for source in sheet['sources'][0:1]:
+    # author = ''
+    # html += '<em>Source Sheet by <a href="{}">{}</a><em>'
+
+    for source in sheet['sources']:
         try:
             text = source['text']
-            # html += u'{}<br>{}'.format(
-            #     text.get('en', ''),
-            #     text.get('he', '').encode('utf-8'))
-            html += text.get('en', '') + u'<br>'
+            html += '{}<br>{}'.format(unicode(text.get('en', '')),
+                                      unicode(text.get('he', '')))
         except KeyError:
-            html += source.get('comment', '')
-    return html
+            html += unicode(source.get('comment', ''))
+    return html.encode('utf-8')
 
 
 def create_html_file(sheet, path='files/'):
