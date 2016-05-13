@@ -64,15 +64,16 @@ def main():
     http = credentials.authorize(httplib2.Http())
     service = apiclient.discovery.build('drive', 'v3', http=http)
 
-    sheet_data = sefaria_sheet_api(raw_input("Input sheet id: "))
+    sheet_id = raw_input("Input sheet id: ")
+    sheet = sefaria_sheet_api(sheet_id)
 
     file_metadata = {
-        'name': sheet_data.get('title', '').strip(),
         'mimeType': 'application/vnd.google-apps.spreadsheet'
+        'name': sheet.get('title', '').strip(),
     }
 
     media = apiclient.http.MediaIoBaseUpload(
-        StringIO.StringIO(create_html_string(sheet_data)),
+        StringIO.StringIO(create_html_string(sheet)),
         mimetype='text/html',
         resumable=True)
 
